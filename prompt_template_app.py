@@ -1,8 +1,11 @@
+import io
+import sys
 import streamlit as st
 from prompt_template_database import session, PromptTemplate
 from text_definitions import prompting_principles
 from langchain.prompts import ChatPromptTemplate
 from sqlalchemy import asc
+from huggingface_chat import HuggingChatWrapper
 
 # Function to create Streamlit input fields for string variables
 def create_input_fields(variables):
@@ -121,29 +124,38 @@ def main():
             st.write(f"Purpose: {selected_template.purpose}")
             st.write(f"Template: {selected_template.template}")
 
-            # Add a dropdown for selecting language model
-            language_model = st.selectbox(
-                "Select Language Model", ["ChatGPT", "Local Language Model"]
-            )
-            if language_model == "ChatGPT":
-                pass
-            elif language_model == "Local Language Model":
-                # Load your local language model here
-                pass
+
+            chat_wrapper = HuggingChatWrapper()
+            model_names = chat_wrapper.get_available_models()
+            chat_wrapper.reset()
+         # Display available models in selectbox
+            
+            model_name = st.sidebar.selectbox("Select Model", model_names)
+                        
             prompt_template = ChatPromptTemplate.from_template(
                 selected_template.template
             )
             input_variables = prompt_template.messages[0].prompt.input_variables
             inputs = create_input_fields(input_variables)
 
-            if st.button("Submit"):
+            if st.button("Submit"):                
                 input_values = {}
                 for var_name, var_value in inputs.items():
                     input_values[var_name] = var_value
                 prompt = ChatPromptTemplate.from_template(selected_template.template)
                 formatted_messages = prompt.format_messages(**input_values)
+                formatted_message = formatted_messages[0].content
                 st.text_area(label="Prompt", value=formatted_messages,height=500)
-
+                chat_wrapper = HuggingChatWrapper()
+                chat_wrapper.switch_model(model_name)            
+                query_result = chat_wrapper.chat(formatted_message)                
+                st.text_area(label="LLM Response",value=query_result,height=500)
+            
+            if not st.checkbox("Keep chat on Server"):
+                chat_wrapper.reset()
+            
+                
+                
 
 if __name__ == "__main__":
     main()
