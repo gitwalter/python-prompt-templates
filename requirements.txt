@@ -1,0 +1,5 @@
+streamlit
+uuid
+SQLAlchemy
+langchain
+langchain-core
