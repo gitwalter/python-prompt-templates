@@ -1,5 +1,3 @@
-import io
-import sys
 import streamlit as st
 from prompt_template_database import session, PromptTemplate
 from text_definitions import prompting_principles

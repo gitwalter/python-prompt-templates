@@ -3,3 +3,4 @@ uuid
 SQLAlchemy
 langchain
 langchain-core
+hugchat
