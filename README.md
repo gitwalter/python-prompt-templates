@@ -1,6 +1,6 @@
 # Prompt Template App
 
-The Prompt Template App is a Streamlit-based application designed for managing and utilizing prompt templates for generating conversational prompts and interacting with HuggingFace chatbots. It serves as a user-friendly interface for creating, editing, and using prompt templates effectively.
+The Prompt Template App is a Streamlit-based application designed for managing and utilizing prompt templates for generating conversational prompts and interacting with HuggingFace chatbots [HuggingChat](https://huggingface.co/chat/). It serves as a user-friendly interface for creating, editing, and using prompt templates effectively.
 
 ## Features
 
