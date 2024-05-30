@@ -20,11 +20,9 @@ class HuggingChatWrapper:
 
         self.model_names = [model.name for model in self.models]
 
-
-
     def get_available_models(self):
         # Get available language models
-        return self.model_names
+        return self.model_names        
 
     def switch_model(self, model_name):        
         for idx, model in enumerate(self.models):
@@ -35,12 +33,14 @@ class HuggingChatWrapper:
 
     def chat(self, query, web_search):
         # Execute a chat query and return the response
-        self.chatbot.new_conversation(switch_to = True)
+        # self.chatbot.new_conversation(switch_to = True)
         query_result = self.chatbot.chat(query, web_search=web_search)
         return query_result
     
     def reset(self):
         conversations = self.chatbot.get_conversation_list()
         for conversation in conversations:
-            self.chatbot.delete_conversation(conversation)
-        # self.chatbot.delete_all_conversations()
+            self.chatbot.delete_conversation(conversation)                    
+        
+    def delete_all(self):
+        self.chatbot.delete_all_conversations()

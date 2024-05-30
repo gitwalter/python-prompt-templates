@@ -26,6 +26,9 @@ def get_templates():
         
     return templates
 
+@st.cache_resource
+def get_chat_wrapper():
+    return HuggingChatWrapper()
 
 # Main function to run the Streamlit app
 def main():
@@ -129,11 +132,11 @@ def main():
             st.write(f"Template: {selected_template.template}")
 
 
-            chat_wrapper = HuggingChatWrapper()
+            chat_wrapper = get_chat_wrapper()
             model_names = chat_wrapper.get_available_models()
             chat_wrapper.reset()
-         # Display available models in selectbox
             
+         # Display available models in selectbox            
             model_name = st.sidebar.selectbox("Select Model", model_names)
                         
             prompt_template = ChatPromptTemplate.from_template(
@@ -142,32 +145,46 @@ def main():
             input_variables = prompt_template.messages[0].prompt.input_variables
             inputs = create_input_fields(input_variables)
 
-            
+            display_query_result = False
 
             col1, col2 = st.columns(2)
             with col1:
                 use_web_search = st.checkbox("Use Web Search", selected_template.use_web_search)                            
-                    
+                        
             with col2:
-                if not st.checkbox("Keep chat on Server"):
-                    chat_wrapper.reset()
-                
-            if st.button("Submit"):                
-                input_values = {}
-                for var_name, var_value in inputs.items():
-                    input_values[var_name] = var_value
-                prompt = ChatPromptTemplate.from_template(selected_template.template)
-                formatted_messages = prompt.format_messages(**input_values)
-                formatted_message = formatted_messages[0].content
+                keep_chat_on_server = st.checkbox("Keep chat on Server")                    
+            
+            col3, col4 = st.columns(2)    
+            with col3:
+                if st.button("Submit"):                
+                    input_values = {}
+                    for var_name, var_value in inputs.items():
+                        input_values[var_name] = var_value
+                    prompt = ChatPromptTemplate.from_template(selected_template.template)
+                    formatted_messages = prompt.format_messages(**input_values)
+                    formatted_message = formatted_messages[0].content                    
+                    chat_wrapper = HuggingChatWrapper()
+                    chat_wrapper.switch_model(model_name)            
+                    query_result = chat_wrapper.chat(formatted_message, use_web_search)                
+                    display_query_result = True
+           
+            all_deleted = False
+            with col4:
+                if st.button("Delete all Chats on Server"):
+                    chat_wrapper.delete_all()
+                    all_deleted = True
+                                    
+            if all_deleted:
+                st.success("All Chats on Server deleted!")
+                    
+            if display_query_result:
                 st.text_area(label="Prompt", value=formatted_messages,height=500, max_chars=None)
-                chat_wrapper = HuggingChatWrapper()
-                chat_wrapper.switch_model(model_name)            
-                query_result = chat_wrapper.chat(formatted_message, use_web_search)                
                 st.text_area(label="LLM Response",value=query_result,height=500)                
-                
                 for source in query_result.web_search_sources:
                     st.markdown(source.title + ": " + source.link)
-                
+            
+            if not keep_chat_on_server:
+                chat_wrapper.reset()
 
 if __name__ == "__main__":
     main()
