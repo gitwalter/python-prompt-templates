@@ -33,9 +33,9 @@ class HuggingChatWrapper:
         
         self.chatbot.switch_llm(model_index)
 
-    def chat(self, query):
+    def chat(self, query, web_search):
         # Execute a chat query and return the response
-        query_result = self.chatbot.chat(query)
+        query_result = self.chatbot.chat(query, web_search=web_search)
         return query_result
     
     def reset(self):

@@ -55,6 +55,7 @@ def main():
             name = st.text_input("Name")
             topic = st.text_input("Topic")
             purpose = st.text_area("Purpose")
+            use_web_search = st.checkbox("Use Web Search")
             template = st.text_area(
                 "Template", height=250
             )  # Make the text area expand vertically
@@ -68,7 +69,11 @@ def main():
                         st.error("A template with this name already exists!")
                     else:
                         new_template = PromptTemplate(
-                            topic=topic, name=name, purpose=purpose, template=template
+                            topic=topic, 
+                            name=name, 
+                            purpose=purpose,
+                            template=template,
+                            use_web_search=use_web_search
                         )
                         session.add(new_template)
                         session.commit()
@@ -79,6 +84,7 @@ def main():
                 topic = st.text_input("Topic", value=selected_template.topic)
                 name = st.text_input("Name", value=selected_template.name)
                 purpose = st.text_area("Purpose", value=selected_template.purpose)
+                use_web_search = st.checkbox("Use Web Search", value=selected_template.use_web_search)
                 template = st.text_area(
                     "Template", value=selected_template.template, height=400
                 )  # Make the text area expand vertically
@@ -98,6 +104,7 @@ def main():
                             else:
                                 selected_template.name = name
                                 selected_template.purpose = purpose
+                                selected_template.use_web_search = use_web_search
                                 selected_template.template = template
                                 session.commit()
                                 st.success("Changes saved successfully!")
@@ -136,22 +143,31 @@ def main():
             input_variables = prompt_template.messages[0].prompt.input_variables
             inputs = create_input_fields(input_variables)
 
-            if st.button("Submit"):                
-                input_values = {}
-                for var_name, var_value in inputs.items():
-                    input_values[var_name] = var_value
-                prompt = ChatPromptTemplate.from_template(selected_template.template)
-                formatted_messages = prompt.format_messages(**input_values)
-                formatted_message = formatted_messages[0].content
-                st.text_area(label="Prompt", value=formatted_messages,height=500)
-                chat_wrapper = HuggingChatWrapper()
-                chat_wrapper.switch_model(model_name)            
-                query_result = chat_wrapper.chat(formatted_message)                
-                st.text_area(label="LLM Response",value=query_result,height=500)
-            
-            if not st.checkbox("Keep chat on Server"):
-                chat_wrapper.reset()
-            
+            use_web_search = st.checkbox("Use Web Search", selected_template.use_web_search)
+
+            col1, col2 = st.columns(2)
+            with col1:
+                if st.button("Submit"):                
+                    input_values = {}
+                    for var_name, var_value in inputs.items():
+                        input_values[var_name] = var_value
+                    prompt = ChatPromptTemplate.from_template(selected_template.template)
+                    formatted_messages = prompt.format_messages(**input_values)
+                    formatted_message = formatted_messages[0].content
+                    st.text_area(label="Prompt", value=formatted_messages,height=500)
+                    chat_wrapper = HuggingChatWrapper()
+                    chat_wrapper.switch_model(model_name)            
+                    query_result = chat_wrapper.chat(formatted_message, use_web_search)                
+                    st.text_area(label="LLM Response",value=query_result,height=500)
+                    
+                    for source in query_result.web_search_sources:
+                        st.markdown(source.title + ": " + source.link)
+                        
+                    
+            with col2:
+                if not st.checkbox("Keep chat on Server"):
+                    chat_wrapper.reset()
+                
                 
                 
 

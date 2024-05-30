@@ -1,4 +1,5 @@
 from sqlalchemy import create_engine, MetaData, Column, String, Text
+from sqlalchemy.types import Boolean
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
 import uuid
@@ -16,12 +17,14 @@ class PromptTemplate(Base):
     name = Column(String)
     purpose = Column(String)
     template = Column(Text)
-    def __init__(self, topic, name, purpose, template):
+    use_web_search = Column(Boolean)
+    def __init__(self, topic, name, purpose, template, use_web_search):
         self.id = str(uuid.uuid4())
         self.topic = topic
         self.name = name
         self.purpose = purpose
         self.template = template
+        self.use_web_search = use_web_search
    
    
         
