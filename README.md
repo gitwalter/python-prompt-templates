@@ -1,6 +1,6 @@
 # Prompt Template App
 
-The Prompt Template App is a Streamlit-based application designed for managing and utilizing prompt templates for generating conversational prompts using [LangChain](https://python.langchain.com/v0.1/docs/modules/model_io/prompts/quick_start/) to manage prompts and interacting with HuggingFace chatbots [HuggingChat](https://huggingface.co/chat/) via the unofficial [HuggingChat Python-API](https://github.com/Soulter/hugging-chat-api.git). It serves as a user-friendly interface for creating, editing, and using prompt templates effectively.
+The Prompt Template App is a [Streamlit](https://streamlit.io/)-based application designed for managing and utilizing prompt templates for generating conversational prompts using [LangChain](https://python.langchain.com/v0.1/docs/modules/model_io/prompts/quick_start/) to manage prompts and interacting with HuggingFace chatbots [HuggingChat](https://huggingface.co/chat/) via the unofficial [HuggingChat Python-API](https://github.com/Soulter/hugging-chat-api.git). It serves as a user-friendly interface for creating, editing, and using prompt templates effectively.
 
 ## Features
 
