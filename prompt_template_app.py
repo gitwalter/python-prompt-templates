@@ -154,7 +154,7 @@ def main():
                     prompt = ChatPromptTemplate.from_template(selected_template.template)
                     formatted_messages = prompt.format_messages(**input_values)
                     formatted_message = formatted_messages[0].content
-                    st.text_area(label="Prompt", value=formatted_messages,height=500)
+                    st.text_area(label="Prompt", value=formatted_messages,height=500, max_chars=None)
                     chat_wrapper = HuggingChatWrapper()
                     chat_wrapper.switch_model(model_name)            
                     query_result = chat_wrapper.chat(formatted_message, use_web_search)                

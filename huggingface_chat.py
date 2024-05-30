@@ -35,6 +35,7 @@ class HuggingChatWrapper:
 
     def chat(self, query, web_search):
         # Execute a chat query and return the response
+        self.chatbot.new_conversation(switch_to = True)
         query_result = self.chatbot.chat(query, web_search=web_search)
         return query_result
     
