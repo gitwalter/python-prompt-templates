@@ -143,32 +143,31 @@ def main():
             input_variables = prompt_template.messages[0].prompt.input_variables
             inputs = create_input_fields(input_variables)
 
-            use_web_search = st.checkbox("Use Web Search", selected_template.use_web_search)
+            
 
             col1, col2 = st.columns(2)
             with col1:
-                if st.button("Submit"):                
-                    input_values = {}
-                    for var_name, var_value in inputs.items():
-                        input_values[var_name] = var_value
-                    prompt = ChatPromptTemplate.from_template(selected_template.template)
-                    formatted_messages = prompt.format_messages(**input_values)
-                    formatted_message = formatted_messages[0].content
-                    st.text_area(label="Prompt", value=formatted_messages,height=500, max_chars=None)
-                    chat_wrapper = HuggingChatWrapper()
-                    chat_wrapper.switch_model(model_name)            
-                    query_result = chat_wrapper.chat(formatted_message, use_web_search)                
-                    st.text_area(label="LLM Response",value=query_result,height=500)
-                    
-                    for source in query_result.web_search_sources:
-                        st.markdown(source.title + ": " + source.link)
-                        
+                use_web_search = st.checkbox("Use Web Search", selected_template.use_web_search)                            
                     
             with col2:
                 if not st.checkbox("Keep chat on Server"):
                     chat_wrapper.reset()
                 
+            if st.button("Submit"):                
+                input_values = {}
+                for var_name, var_value in inputs.items():
+                    input_values[var_name] = var_value
+                prompt = ChatPromptTemplate.from_template(selected_template.template)
+                formatted_messages = prompt.format_messages(**input_values)
+                formatted_message = formatted_messages[0].content
+                st.text_area(label="Prompt", value=formatted_messages,height=500, max_chars=None)
+                chat_wrapper = HuggingChatWrapper()
+                chat_wrapper.switch_model(model_name)            
+                query_result = chat_wrapper.chat(formatted_message, use_web_search)                
+                st.text_area(label="LLM Response",value=query_result,height=500)                
                 
+                for source in query_result.web_search_sources:
+                    st.markdown(source.title + ": " + source.link)
                 
 
 if __name__ == "__main__":
