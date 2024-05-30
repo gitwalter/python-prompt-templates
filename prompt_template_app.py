@@ -2,7 +2,6 @@ import streamlit as st
 from prompt_template_database import session, PromptTemplate
 from text_definitions import prompting_principles
 from langchain.prompts import ChatPromptTemplate
-from sqlalchemy import asc
 from huggingface_chat import HuggingChatWrapper
 
 # Function to create Streamlit input fields for string variables
