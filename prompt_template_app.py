@@ -154,28 +154,29 @@ def main():
             with col2:
                 keep_chat_on_server = st.checkbox("Keep chat on Server")                    
             
-            col3, col4 = st.columns(2)    
-            with col3:
-                if st.button("Submit"):                
-                    input_values = {}
-                    for var_name, var_value in inputs.items():
-                        input_values[var_name] = var_value
-                    prompt = ChatPromptTemplate.from_template(selected_template.template)
-                    formatted_messages = prompt.format_messages(**input_values)
-                    formatted_message = formatted_messages[0].content                    
-                    chat_wrapper = HuggingChatWrapper()
-                    chat_wrapper.switch_model(model_name)            
-                    query_result = chat_wrapper.chat(formatted_message, use_web_search)                
-                    display_query_result = True
+            # col3, col4 = st.columns(2)    
+            # with col3:
+            if st.button("Submit"):                
+                input_values = {}
+                for var_name, var_value in inputs.items():
+                    input_values[var_name] = var_value
+                prompt = ChatPromptTemplate.from_template(selected_template.template)
+                formatted_messages = prompt.format_messages(**input_values)
+                formatted_message = formatted_messages[0].content                    
+                chat_wrapper = HuggingChatWrapper()
+                chat_wrapper.switch_model(model_name)            
+                query_result = chat_wrapper.chat(formatted_message, use_web_search)                
+                display_query_result = True
            
-            all_deleted = False
-            with col4:
-                if st.button("Delete all Chats on Server"):
-                    chat_wrapper.delete_all()
-                    all_deleted = True
-                                    
-            if all_deleted:
+            # all_deleted = False
+            # with col4:
+            if st.sidebar.button("Delete all Chats on Server"):
+                chat_wrapper.delete_all()
                 st.success("All Chats on Server deleted!")
+                # all_deleted = True
+                                    
+            # if all_deleted:
+                # st.success("All Chats on Server deleted!")
                     
             if display_query_result:
                 st.text_area(label="Prompt", value=formatted_messages,height=500, max_chars=None)
