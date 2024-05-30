@@ -45,7 +45,6 @@ The Prompt Template App is a Streamlit-based application designed for managing a
 
 ## File Structure
 
-├── htmlTemplates.py # HTML templates for the Streamlit app
 
 ├── huggingface_chat.py # Wrapper for calling the HuggingFace LLM chatbot API
 
