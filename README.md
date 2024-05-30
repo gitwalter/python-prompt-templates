@@ -59,13 +59,4 @@ The Prompt Template App is a [Streamlit](https://streamlit.io/)-based applicatio
 
 └── requirements.txt # Requirements for the Streamlit app
 
-
-## Contributing
-
-Contributions to the Prompt Template App are welcome! If you have ideas, suggestions, or issues, feel free to create a pull request or open an issue on [GitHub](https://github.com/gitwalter/prompt_template_app).
-
-## License
-
-This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.
-
 Enjoy using the Prompt Template App! 🚀
