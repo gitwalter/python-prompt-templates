@@ -1,3 +1,41 @@
+"""
+Streamlit Application for Prompt Template Management and Chat Interaction with HuggingFace API
+
+This application provides a user interface for managing prompt templates and interacting with a language model (LLM) using these templates. The application has the following capabilities:
+
+- **Create and Edit Prompt Templates**: Users can create new prompt templates, edit existing ones, or delete templates.
+- **Use Templates to Generate Prompts**: Users can select a template, input variables, and generate prompts that are sent to the LLM for processing.
+- **Display Prompting Principles**: Users can view principles and guidelines for effective prompting.
+
+Key Components:
+1. **Streamlit Input Fields**: Dynamic creation of input fields for template variables.
+2. **Template Management**: Functions to retrieve, create, update, and delete templates from a database.
+3. **HuggingFace API Integration**: Use of `HuggingChatWrapper` to interact with language models hosted on HuggingFace via the HuggingChat API.
+4. **Prompt Template Handling**: Use of `ChatPromptTemplate` to format and process input data for the LLM.
+
+Functions:
+    - `create_input_fields(variables)`: Creates Streamlit input fields for string variables.
+    - `get_templates()`: Retrieves templates by topic from the database.
+    - `get_chat_wrapper()`: Returns an instance of `HuggingChatWrapper`, cached for resource efficiency.
+    - `main()`: Main function to run the Streamlit app.
+
+Workflow:
+- **Template Editing**: Users select "Edit Template" to modify existing templates or create new ones. Input fields for template details (name, topic, purpose, template content) are provided, along with options to save or delete the template.
+- **Using Templates**: Users select "Use Template" to pick a template and provide input variables. The formatted prompt is sent to the selected model via the HuggingChat API, and the response is displayed along with any web search sources used.
+- **Prompting Principles**: Users can view predefined principles for creating effective prompts.
+
+Dependencies:
+- `streamlit`: For creating the web interface.
+- `langchain.prompts.ChatPromptTemplate`: For handling prompt templates.
+- `prompt_template_database.session` and `prompt_template_database.PromptTemplate`: For database interactions.
+- `text_definitions.prompting_principles`: For displaying prompting guidelines.
+- `huggingface_chat.HuggingChatWrapper`: For interacting with the HuggingFace LLM API.
+
+Usage:
+- Run the script in a Streamlit environment to start the application.
+- Navigate through the sidebar options to manage templates or interact with the LLM.
+
+"""
 import streamlit as st
 from prompt_template_database import session, PromptTemplate
 from text_definitions import prompting_principles
