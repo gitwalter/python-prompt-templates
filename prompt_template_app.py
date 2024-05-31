@@ -163,8 +163,8 @@ def use_template():
 
         keep_chat_on_server = side_col2.checkbox("Keep chat on Server")
 
-        side_col3, side_col4 = st.sidebar.columns(2)        
-        if side_col4.button("Submit"):
+        
+        if st.button("Submit"):
             formatted_message = get_formatted_message(selected_template, inputs)
             chat_wrapper, query_result = call_llm(
                 model_name, use_web_search, formatted_message
@@ -180,7 +180,7 @@ def use_template():
             if not keep_chat_on_server:
                 chat_wrapper.reset()
     
-        if side_col3.button("Delete all Chats on Server"):
+        if st.sidebar.button("Delete all Chats on Server"):
             chat_wrapper = HuggingChatWrapper()
             chat_wrapper.delete_all()
             st.success("All Chats on Server deleted!")
