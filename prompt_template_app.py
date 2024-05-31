@@ -44,7 +44,6 @@ from langchain.prompts import ChatPromptTemplate
 from huggingface_chat import HuggingChatWrapper
 
 
-# Function to create Streamlit input fields for string variables
 def create_input_fields(template):
     """
     Create Streamlit input fields for string variables.
@@ -55,7 +54,7 @@ def create_input_fields(template):
     Returns:
         dict: A dictionary with variable names as keys and their corresponding
               Streamlit input values.
-    """    
+    """
     prompt_template = ChatPromptTemplate.from_template(template)
 
     variables = prompt_template.messages[0].prompt.input_variables
@@ -66,14 +65,13 @@ def create_input_fields(template):
     return inputs
 
 
-# retrieve templates by topic from db
 def get_template_names(template_use=False):
     """
     Retrieve templates by topic from the database.
 
     Returns:
         list: A list of prompt templates filtered by the selected topic.
-    """    
+    """
     topics = PromptTemplate.get_topics(session)
     selected_topic = st.sidebar.selectbox(
         "Select Topic", ["All"] + topics
@@ -82,7 +80,7 @@ def get_template_names(template_use=False):
         templates = PromptTemplate.get_all_templates(session)
     else:
         templates = PromptTemplate.get_templates_by_topic(session, selected_topic)
-    
+
     if not template_use:
         template_names = ["New Template"]  # Make "New Template" the first option
         template_names.extend([template.name for template in templates])
@@ -92,7 +90,6 @@ def get_template_names(template_use=False):
     return template_names
 
 
-# Main function to run the Streamlit app
 def main():
     """
     Main function to run the Streamlit app.
@@ -107,7 +104,6 @@ def main():
     action = st.sidebar.radio(
         "Action", ["Edit Template", "Use Template", "Prompting Principles"]
     )
-        
 
     if action == "Prompting Principles":
         st.markdown(prompting_principles)
@@ -124,8 +120,9 @@ def main():
 
     elif action == "Use Template":
         use_template()
-        
-def get_selected_template_name(template_names):    
+
+
+def get_selected_template_name(template_names):
     selected_template_name = st.sidebar.selectbox("Template", template_names)
     return selected_template_name
 
@@ -146,7 +143,7 @@ def use_template():
     """
     st.sidebar.title("Select Prompt Template")
     template_names = get_template_names(template_use=True)
-    
+
     selected_template_name = st.sidebar.selectbox("Template", template_names)
 
     selected_template = PromptTemplate.get_by_name(session, selected_template_name)
@@ -160,30 +157,19 @@ def use_template():
         model_name = st.sidebar.selectbox("Select Model", model_names)
 
         inputs = create_input_fields(selected_template.template)
+       
+        side_col1, side_col2 = st.sidebar.columns(2)
+        use_web_search = side_col1.checkbox( "Use Web Search", selected_template.use_web_search )
 
-        display_query_result = False
+        keep_chat_on_server = side_col2.checkbox("Keep chat on Server")
 
-        col1, col2 = st.columns(2)
-        with col1:
-            use_web_search = st.checkbox(
-                "Use Web Search", selected_template.use_web_search
-            )
-
-        keep_chat_on_server = False
-        
-        with col2:
-            keep_chat_on_server = st.checkbox("Keep chat on Server")
-
-        chat_wrapper = None
-
-        if st.button("Submit"):
+        side_col3, side_col4 = st.sidebar.columns(2)        
+        if side_col4.button("Submit"):
             formatted_message = get_formatted_message(selected_template, inputs)
             chat_wrapper, query_result = call_llm(
                 model_name, use_web_search, formatted_message
             )
-            display_query_result = True
-
-        if display_query_result:
+                
             st.text_area(
                 label="Prompt", value=formatted_message, height=500, max_chars=None
             )
@@ -191,10 +177,10 @@ def use_template():
             for source in query_result.web_search_sources:
                 st.markdown(source.title + ": " + source.link)
 
-        if chat_wrapper is not None and not keep_chat_on_server:
-            chat_wrapper.reset()
-        
-        if st.sidebar.button("Delete all Chats on Server"):
+            if not keep_chat_on_server:
+                chat_wrapper.reset()
+    
+        if side_col3.button("Delete all Chats on Server"):
             chat_wrapper = HuggingChatWrapper()
             chat_wrapper.delete_all()
             st.success("All Chats on Server deleted!")
@@ -241,7 +227,7 @@ def get_formatted_message(selected_template, inputs):
 
     Returns:
         str: The formatted message.
-    """        
+    """
     input_values = {}
     for var_name, var_value in inputs.items():
         input_values[var_name] = var_value
