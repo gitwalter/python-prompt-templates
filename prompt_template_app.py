@@ -61,7 +61,10 @@ def create_input_fields(template):
     inputs = {}
     for variable in variables:
         var_name = variable
-        inputs[var_name] = st.text_input(var_name)
+        if len(variables) > 1:
+            inputs[var_name] = st.text_input(var_name)
+        else:
+            inputs[var_name] = st.text_area(var_name, height=200)
     return inputs
 
 
