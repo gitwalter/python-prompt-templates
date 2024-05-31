@@ -355,11 +355,10 @@ def delete_template(selected_template):
     Args:
         selected_template (PromptTemplate): The selected prompt template to be deleted.
     """
-    if st.button("Delete", key="delete_button"):
-        if selected_template:
-            session.delete(selected_template)
-            session.commit()
-            st.success("Template deleted successfully!")
+    if st.button("Delete", key="delete_button") and selected_template:
+        session.delete(selected_template)
+        session.commit()
+        st.success("Template deleted successfully!")
 
 
 def create_template(template_names):
