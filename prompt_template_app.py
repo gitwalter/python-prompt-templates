@@ -169,6 +169,8 @@ def use_template():
                 "Use Web Search", selected_template.use_web_search
             )
 
+        keep_chat_on_server = False
+        
         with col2:
             keep_chat_on_server = st.checkbox("Keep chat on Server")
 
@@ -189,10 +191,11 @@ def use_template():
             for source in query_result.web_search_sources:
                 st.markdown(source.title + ": " + source.link)
 
-        if chat_wrapper and not keep_chat_on_server:
+        if chat_wrapper is not None and not keep_chat_on_server:
             chat_wrapper.reset()
-
+        
         if st.sidebar.button("Delete all Chats on Server"):
+            chat_wrapper = HuggingChatWrapper()
             chat_wrapper.delete_all()
             st.success("All Chats on Server deleted!")
 
