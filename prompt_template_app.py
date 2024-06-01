@@ -16,7 +16,6 @@ Key Components:
 Functions:
     - `create_input_fields(variables)`: Creates Streamlit input fields for string variables.
     - `get_templates()`: Retrieves templates by topic from the database.
-    - `get_chat_wrapper()`: Returns an instance of `HuggingChatWrapper`, cached for resource efficiency.
     - `main()`: Main function to run the Streamlit app.
 
 Workflow:
@@ -126,6 +125,15 @@ def main():
 
 
 def get_selected_template_name(template_names):
+    """
+    Get the name of the selected template.
+
+    Parameters:
+    - template_names (list): A list of strings representing the names of available templates.
+
+    Returns:
+    - str: The name of the selected template.
+    """
     selected_template_name = st.sidebar.selectbox("Template", template_names)
     return selected_template_name
 
@@ -175,8 +183,17 @@ def use_template():
                 
             st.text_area(
                 label="Prompt", value=formatted_message, height=500, max_chars=None
-            )
-            st.text_area(label="LLM Response", value=query_result, height=500)
+            )                        
+            st.markdown("LLM Response")
+            st.markdown(query_result)
+            conversations = chat_wrapper.chatbot.get_conversation_list()
+
+            for conversation in conversations:                
+                st.markdown(conversation.id + ' ' + conversation.model + ' ' + conversation.title)
+                for message in conversation.history:
+                    st.markdown(message)
+
+
             for source in query_result.web_search_sources:
                 st.markdown(source.title + ": " + source.link)
 

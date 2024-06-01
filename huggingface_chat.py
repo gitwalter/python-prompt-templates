@@ -43,8 +43,15 @@ class HuggingChatWrapper:
             email (str, optional): The email used to log in to Hugging Face. Defaults to None.
             password (str, optional): The password used to log in to Hugging Face. Defaults to None.
         """
-        self.email = st.secrets.get("HF_EMAIL")
-        self.password = st.secrets.get("HF_PWD")                        
+        if email:
+            self.email = email
+        else:
+            self.email = st.secrets.get("HF_EMAIL")
+
+        if password:
+            self.password = password            
+        else:
+            self.password = st.secrets.get("HF_PWD")                        
 
         # Log in to Hugging Face and grant authorization to Hugging Chat
         self.cookie_path_dir = "./cookies/"
@@ -52,10 +59,10 @@ class HuggingChatWrapper:
         self.cookies = sign.login(cookie_dir_path=self.cookie_path_dir, save_cookies=True)
         
         # Create ChatBot
-        self.chatbot = hugchat.ChatBot(cookies=self.cookies.get_dict())
-
+        self.chatbot = hugchat.ChatBot(cookies=self.cookies.get_dict())       
         self.models = self.chatbot.get_available_llm_models()
         self.model_names = [model.name for model in self.models]
+        self.reset()
 
     def get_available_models(self):
         """
@@ -76,8 +83,7 @@ class HuggingChatWrapper:
         for idx, model in enumerate(self.models):
             if model.name == model_name:
                 model_index = idx
-        
-        self.chatbot.switch_llm(model_index)
+        self.chatbot.new_conversation(modelIndex = model_index, switch_to = True)        
 
     def chat(self, query, web_search):
         """
