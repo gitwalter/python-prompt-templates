@@ -191,7 +191,7 @@ def use_template():
             for conversation in conversations:                
                 st.markdown(conversation.id + ' ' + conversation.model + ' ' + conversation.title)
                 for message in conversation.history:
-                    st.markdown(message)
+                    st.markdown(message.id + ' ' + message.role)
 
             if use_web_search:
                 for source in query_result.web_search_sources:
