@@ -193,9 +193,9 @@ def use_template():
                 for message in conversation.history:
                     st.markdown(message)
 
-
-            for source in query_result.web_search_sources:
-                st.markdown(source.title + ": " + source.link)
+            if use_web_search:
+                for source in query_result.web_search_sources:
+                    st.markdown(source.title + ": " + source.link)
 
             if not keep_chat_on_server:
                 chat_wrapper.reset()
