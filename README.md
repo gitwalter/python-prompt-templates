@@ -46,17 +46,13 @@ The Prompt Template App is a [Streamlit](https://streamlit.io/)-based applicatio
 
 ## File Structure
 
-
+```sh
 ├── huggingface_chat.py # Wrapper for calling the HuggingFace LLM chatbot API
-
 ├── import_csv_to_db.py # Program for importing prompt templates from CSV files into the database
-
 ├── prompt_template_app.py # Main application file with logic
-
 ├── prompt_template_database.py # Database file with SQLAlchemy entity PromptTemplate
-
 ├── prompt_templates.db # SQLite database for storing prompt templates wrapped by SQLAlchemy
-
 └── requirements.txt # Requirements for the Streamlit app
+```
 
 Enjoy using the Prompt Template App! 🚀
