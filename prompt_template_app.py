@@ -144,6 +144,12 @@ def initialize_session_state():
     """
     if "model_names" not in st.session_state:
         st.session_state["model_names"] = []
+        
+    if 'hf_email' not in st.session_state:
+        st.session_state["hf_email"] = ''
+        
+    if 'hf_pwd' not in st.session_state:
+        st.session_state["hf_pwd"] = ''
 
 
 def use_template():
@@ -199,7 +205,18 @@ def use_template():
 
             if not keep_chat_on_server:
                 chat_wrapper.reset()
-    
+        
+        
+                
+        hf_email = st.sidebar.text_input(label='HuggingFace E-Mail')
+        if hf_email:
+            st.session_state['hf_email'] = hf_email
+        
+        hf_pwd = st.sidebar.text_input(label='HuggingFace Password')
+        if hf_pwd:
+            st.session_state['hf_pwd'] = hf_pwd
+                        
+        
         if st.sidebar.button("Delete all Chats on Server"):
             chat_wrapper = HuggingChatWrapper()
             chat_wrapper.delete_all()

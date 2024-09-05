@@ -35,23 +35,18 @@ class HuggingChatWrapper:
         delete_all(): Deletes all conversations.
     """
     
-    def __init__(self, email=None, password=None):
+    def __init__(self):
         """
-        Initializes a new instance of HuggingChatWrapper.
-
-        Args:
-            email (str, optional): The email used to log in to Hugging Face. Defaults to None.
-            password (str, optional): The password used to log in to Hugging Face. Defaults to None.
+        Initializes a new instance of HuggingChatWrapper.        
         """
-        if email:
-            self.email = email
+        if st.session_state['hf_email']:
+            self.email = st.session_state['hf_email']
         else:
             self.email = st.secrets.get("HF_EMAIL")
-
-        if password:
-            self.password = password            
+        if st.session_state['hf_pwd']:
+            self.password = st.session_state['hf_pwd']
         else:
-            self.password = st.secrets.get("HF_PWD")                        
+            self.password = st.secrets.get("HF_PWD")
 
         # Log in to Hugging Face and grant authorization to Hugging Chat
         self.cookie_path_dir = "./cookies/"

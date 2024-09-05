@@ -3,4 +3,4 @@ uuid
 SQLAlchemy
 langchain
 langchain-core
-hugchat
+hugchat==0.4.11
