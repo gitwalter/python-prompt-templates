@@ -164,7 +164,8 @@ def use_template():
     if hf_email:
         st.session_state['hf_email'] = hf_email
     
-    hf_pwd = st.sidebar.text_input(label='HuggingFace Password')
+    hf_pwd = st.sidebar.text_input(label='HuggingFace Password', type='password')
+
     if hf_pwd:
         st.session_state['hf_pwd'] = hf_pwd
                         
