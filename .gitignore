@@ -1,4 +1,5 @@
 .streamlit
 .venv
 .vscode
+__pycache__
 cookies
