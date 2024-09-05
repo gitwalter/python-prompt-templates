@@ -159,6 +159,16 @@ def use_template():
     Displays the template, collects input variables, sends the formatted prompt to the LLM, and shows the response.
     """
     st.sidebar.title("Select Prompt Template")
+
+    hf_email = st.sidebar.text_input(label='HuggingFace E-Mail')
+    if hf_email:
+        st.session_state['hf_email'] = hf_email
+    
+    hf_pwd = st.sidebar.text_input(label='HuggingFace Password')
+    if hf_pwd:
+        st.session_state['hf_pwd'] = hf_pwd
+                        
+    
     template_names = get_template_names(template_use=True)
 
     selected_template_name = st.sidebar.selectbox("Template", template_names)
@@ -206,16 +216,6 @@ def use_template():
             if not keep_chat_on_server:
                 chat_wrapper.reset()
         
-        
-                
-        hf_email = st.sidebar.text_input(label='HuggingFace E-Mail')
-        if hf_email:
-            st.session_state['hf_email'] = hf_email
-        
-        hf_pwd = st.sidebar.text_input(label='HuggingFace Password')
-        if hf_pwd:
-            st.session_state['hf_pwd'] = hf_pwd
-                        
         
         if st.sidebar.button("Delete all Chats on Server"):
             chat_wrapper = HuggingChatWrapper()
