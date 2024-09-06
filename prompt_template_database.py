@@ -129,7 +129,7 @@ class PromptTemplate(Base):
         return session.query(PromptTemplate).filter_by(topic=topic).order_by(asc(PromptTemplate.name)).all()
 
 # Define the database connection
-engine = create_engine('sqlite:///prompt_templates.db')
+engine = create_engine('sqlite:///python_development_templates.db')
 
 # Create tables
 Base.metadata.create_all(engine)
