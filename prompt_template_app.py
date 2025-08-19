@@ -40,7 +40,7 @@ import streamlit as st
 from prompt_template_database import session, PromptTemplate
 from text_definitions import prompting_principles
 from langchain.prompts import ChatPromptTemplate
-from huggingface_chat import HuggingChatWrapper
+
 
 
 def create_input_fields(template):
@@ -160,68 +160,32 @@ def use_template():
     """
     st.sidebar.title("Select Prompt Template")
 
-    hf_email = st.sidebar.text_input(label='HuggingFace E-Mail')
-    if hf_email:
-        st.session_state['hf_email'] = hf_email
-    
-    hf_pwd = st.sidebar.text_input(label='HuggingFace Password', type='password')
+    api_key = st.sidebar.text_input(label='API Key', type='password')
+    st.session_state['api_key'] = api_key
 
-    if hf_pwd:
-        st.session_state['hf_pwd'] = hf_pwd
-                        
-    
     template_names = get_template_names(template_use=True)
-
     selected_template_name = st.sidebar.selectbox("Template", template_names)
-
     selected_template = PromptTemplate.get_by_name(session, selected_template_name)
 
     if selected_template:
         display_template(selected_template)
 
-        model_names = get_model_names()
-
-        # Display available models in selectbox
-        model_name = st.sidebar.selectbox("Select Model", model_names)
+        # Placeholder for model selection (user can type model name)
+        model_name = st.sidebar.text_input("Model Name (optional)")
 
         inputs = create_input_fields(selected_template.template)
        
-        side_col1, side_col2 = st.sidebar.columns(2)
-        use_web_search = side_col1.checkbox( "Use Web Search", selected_template.use_web_search )
+        use_web_search = st.sidebar.checkbox("Use Web Search", selected_template.use_web_search)
 
-        keep_chat_on_server = side_col2.checkbox("Keep chat on Server")
-
-        
         if st.button("Submit"):
             formatted_message = get_formatted_message(selected_template, inputs)
-            chat_wrapper, query_result = call_llm(
-                model_name, use_web_search, formatted_message
-            )
-                
+            # Empty implementation for chatbot call
+            query_result = call_llm(model_name, use_web_search, formatted_message, api_key)
             st.text_area(
                 label="Prompt", value=formatted_message, height=500, max_chars=None
-            )                        
+            )
             st.markdown("LLM Response")
             st.markdown(query_result)
-            conversations = chat_wrapper.chatbot.get_conversation_list()
-
-            for conversation in conversations:                
-                st.markdown(conversation.id + ' ' + conversation.model + ' ' + conversation.title)
-                for message in conversation.history:
-                    st.markdown(message.id + ' ' + message.role)
-
-            if use_web_search:
-                for source in query_result.web_search_sources:
-                    st.markdown(source.title + ": " + source.link)
-
-            if not keep_chat_on_server:
-                chat_wrapper.reset()
-        
-        
-        if st.sidebar.button("Delete all Chats on Server"):
-            chat_wrapper = HuggingChatWrapper()
-            chat_wrapper.delete_all()
-            st.success("All Chats on Server deleted!")
 
 
 def display_template(selected_template):
@@ -237,22 +201,14 @@ def display_template(selected_template):
     st.write(f"Template: {selected_template.template}")
 
 
-def call_llm(model_name, use_web_search, formatted_message):
+def call_llm(model_name, use_web_search, formatted_message, api_key):
     """
-    Call the LLM with the formatted message.
-
-    Args:
-        model_name (str): The name of the model to use.
-        use_web_search (bool): Whether to use web search.
-        formatted_message (str): The formatted message to send to the LLM.
-
-    Returns:
-        tuple: A tuple containing the chat wrapper instance and the query result.
+    Placeholder for calling a chatbot API with the provided API key.
+    Replace this implementation with actual API call logic as needed.
     """
-    chat_wrapper = HuggingChatWrapper()
-    chat_wrapper.switch_model(model_name)
-    query_result = chat_wrapper.chat(formatted_message, use_web_search)
-    return chat_wrapper, query_result
+    # Example: Use requests to call an API endpoint with api_key, model_name, etc.
+    # For now, return a dummy response.
+    return "[No chatbot API implemented. Provide your API call here.]"
 
 
 def get_formatted_message(selected_template, inputs):
@@ -275,25 +231,7 @@ def get_formatted_message(selected_template, inputs):
     return formatted_message
 
 
-def get_model_names():
-    """
-    Get the list of available model names.
-
-    Returns:
-        list: A list of available model names.
-    """
-    if st.session_state["model_names"] == []:
-        try:
-            chat_wrapper = HuggingChatWrapper()
-            model_names = chat_wrapper.get_available_models()
-            st.session_state["model_names"].append(model_names)
-            chat_wrapper.reset()
-        except Exception as e:
-            st.error(e)
-    else:
-        model_names = st.session_state["model_names"][0]
-
-    return model_names
+    # Removed get_model_names since model selection is now manual
 
 
 def maintain_template(template_names, selected_template_name):
